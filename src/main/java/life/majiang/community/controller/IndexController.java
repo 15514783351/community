@@ -1,9 +1,7 @@
-package life.majiang.community.Controller;
+package life.majiang.community.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Contact :   dzm_1995@163.com
