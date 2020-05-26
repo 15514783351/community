@@ -22,7 +22,7 @@
 ## 工具
 [Git 工具][https://git-scm.com/]  
 [visual Paradigm][https://www.visual-paradigm.com]  
-[Postman]
+[Postman][chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html]
 
 
 ## 脚本

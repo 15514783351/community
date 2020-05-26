@@ -79,7 +79,6 @@ public class CommentService {
                 .andParentIdEqualTo(id)
                 .andTypeEqualTo(CommentTypeEnums.QUESTION.getType());
         List<Comment> comments = commentMapper.selectByExample(commentExample);
-
         if (comments.size() == 0) {
             return new ArrayList<>();
         }

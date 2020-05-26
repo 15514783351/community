@@ -20,7 +20,7 @@ public class PaginationDTO {
     private boolean showFirstPage;
     private boolean showNext;
     private boolean showEndPage;
-    private List<Integer> pages = new ArrayList<>();
+    private List<Integer> pages = new ArrayList<>();  //页面展示的页码
     private Integer page;
     private Integer totalPage;
 
@@ -28,7 +28,7 @@ public class PaginationDTO {
         this.totalPage = totalPage;
         this.page = page;
 
-        pages.add(page);
+        pages.add(page);  //左边展示3个 右边展示3个
         for (int i = 1; i <= 3; i++) {
             if (page - i > 0) {
                 pages.add(0, page - i);

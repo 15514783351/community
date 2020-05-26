@@ -131,7 +131,7 @@ public class QuestionService {
             question.setCommentCount(0);
             question.setLikeCount(0);
 //            questionMapper.insertSelective(question);   //这里不一样
-            questionMapper.insert(question);
+            questionMapper.insertSelective(question);
         } else {
 //            question.setGmtModified(question.getGmtCreat());
             Question updateQuestion = new Question();
