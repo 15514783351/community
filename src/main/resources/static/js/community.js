@@ -35,3 +35,13 @@ function post() {
         dataType: "json"
     });
 }
+
+/**
+ * 展开二级评论
+ */
+
+function collapseComments(e) {
+    var id = e.getAttribute("data-id");
+    var comment = $("#comment-"+id);
+    console.log(id);
+}
