@@ -45,7 +45,7 @@ function comment2target(targetId, type, content) {
 
 function comment(e) {
     var commentId = e.getAttribute("data-id");
-    var content = $("#input-"+commentId).val();
+    var content = $("#input-" + commentId).val();
     comment2target(commentId, 2, content);
 }
 
@@ -64,17 +64,26 @@ function collapseComments(e) {
         e.removeAttribute("data-collapse");
         e.classList.remove("active");
     } else {
-        $.getJSON( "/comment/" + id, function( data ) {
+        $.getJSON("/comment/" + id, function (data) {
             var commentBody = $("comment-body-" + id);
-            comments.appendChild();
-            $.each( data.data, function( key, val ) {
-                items.push( "<li id='" + key + "'>" + val + "</li>" );
+            var items = [];
+
+            // comments.appendChild();
+            $.each(data.data, function (comment) {
+                var c = $("<div/>", {
+                    "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments",
+                    html: comment.content
+                });
+                items.push(c);
             });
 
-            $( "<ul/>", {
-                "class": "my-new-list",
-                html: items.join( "" )
-            }).appendTo( "body" );
+            commentBody.append($("<div/>", {
+                "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 sub-comments collapse",
+                "id": "comment-" + id,
+                html: items.join("")
+            }));
+
+
             //展开二级评论
             comment.addClass("in");
             //标记二级评论状态
