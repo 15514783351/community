@@ -56,7 +56,7 @@ public class QuestionService {
 
         Integer offset = size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_creat desc");
+        questionExample.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
@@ -127,15 +127,15 @@ public class QuestionService {
 
     public void createOrUpdate(Question question) {
         if (question.getId() == null) {
-            question.setGmtCreat(System.currentTimeMillis());
-            question.setGmtModified(question.getGmtCreat());
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
             question.setViewCount(0);
             question.setCommentCount(0);
             question.setLikeCount(0);
 //            questionMapper.insertSelective(question);   //这里不一样
             questionMapper.insertSelective(question);
         } else {
-//            question.setGmtModified(question.getGmtCreat());
+//            question.setGmtModified(question.getGmtCreate());
             Question updateQuestion = new Question();
             updateQuestion.setGmtModified(System.currentTimeMillis());
             updateQuestion.setTitle(question.getTitle());
