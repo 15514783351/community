@@ -2,6 +2,7 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.CommentDTO;
 import life.majiang.community.enums.CommentTypeEnums;
+import life.majiang.community.enums.NotificationEnum;
 import life.majiang.community.exception.CustomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.*;
@@ -43,6 +44,9 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Transactional
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
@@ -66,6 +70,12 @@ public class CommentService {
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
+            Notification notification = new Notification();
+            notification.setGmtCreate(System.currentTimeMillis());
+            notification.setType(NotificationEnum.REPLY_COMMENT.getType());
+            notification.setOuterId(comment.getParentId());  // 回复的是谁 的id
+            notification.setNotifier(comment.getCommentator());
+            notificationMapper.insert(notification);
         } else {
             // 回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
