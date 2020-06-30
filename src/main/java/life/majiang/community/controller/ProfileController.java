@@ -1,7 +1,6 @@
 package life.majiang.community.controller;
 
 import life.majiang.community.dto.PaginationDTO;
-import life.majiang.community.model.Notification;
 import life.majiang.community.model.User;
 import life.majiang.community.service.NotificationService;
 import life.majiang.community.service.QuestionService;
@@ -66,8 +65,10 @@ public class ProfileController {
 
         } else if ("replies".equals(action)) {
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("pagination", paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName", "最新回复");
 
         }

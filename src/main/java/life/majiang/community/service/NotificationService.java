@@ -2,6 +2,7 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.NotificationDTO;
 import life.majiang.community.dto.PaginationDTO;
+import life.majiang.community.enums.NotificationTypeEnum;
 import life.majiang.community.mapper.NotificationMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Notification;
@@ -9,6 +10,7 @@ import life.majiang.community.model.NotificationExample;
 import life.majiang.community.model.User;
 import life.majiang.community.model.UserExample;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,17 +57,23 @@ public class NotificationService {
         if (notifications.size() == 0) {
             return paginationDTO;
         }
-
-        Set<Long> disUserIds = notifications.stream().map(notify -> notify.getNotifier()).collect(Collectors.toSet());
-        ArrayList<Long> userIds = new ArrayList<>(disUserIds);
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andIdIn(userIds);
-        List<User> users = userMapper.selectByExample(userExample);
-        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(u -> u.getId(), u -> u));
-
-
         List<NotificationDTO> notificationDTOS = new ArrayList<>();
+        for (Notification notification : notifications) {
+            NotificationDTO notificationDTO = new NotificationDTO();
+            BeanUtils.copyProperties(notification, notificationDTO);
+            notificationDTO.setType(NotificationTypeEnum.nameOfType(notification.getType()));
+            notificationDTOS.add(notificationDTO);
+        }
+
+
         paginationDTO.setData(notificationDTOS);
-        return null;
+        return paginationDTO;
+    }
+
+    public Long unreadCount(Long userId) {
+        NotificationExample notificationExample = new NotificationExample();
+        notificationExample.createCriteria()
+                .andReceiverEqualTo(userId);
+        return notificationMapper.countByExample(notificationExample);
     }
 }
