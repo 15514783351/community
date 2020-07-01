@@ -11,5 +11,7 @@ public class NotificationDTO {
     private Long notifier;  // 通知的人
     private String notifierName;  // 通知的人
     private String outerTitle;  // 回复别人的题目名称
-    private String type;
+    private Long outerId;
+    private String typeName;
+    private Integer type;
 }

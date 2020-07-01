@@ -2,7 +2,10 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.NotificationDTO;
 import life.majiang.community.dto.PaginationDTO;
+import life.majiang.community.enums.NotificationStatusEnum;
 import life.majiang.community.enums.NotificationTypeEnum;
+import life.majiang.community.exception.CustomizeErrorCode;
+import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.NotificationMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Notification;
@@ -14,10 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,14 +35,14 @@ public class NotificationService {
         Integer totalPage;
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria().andReceiverEqualTo(userId);
-        Integer totalCount = (int)notificationMapper.countByExample(notificationExample);
+        Integer totalCount = (int) notificationMapper.countByExample(notificationExample);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
             totalPage = totalCount / size + 1;
         }
         if (page < 1) {
-            page =1;
+            page = 1;
         } else if (page > totalPage) {
             page = totalPage;
         }
@@ -61,7 +61,10 @@ public class NotificationService {
         for (Notification notification : notifications) {
             NotificationDTO notificationDTO = new NotificationDTO();
             BeanUtils.copyProperties(notification, notificationDTO);
-            notificationDTO.setType(NotificationTypeEnum.nameOfType(notification.getType()));
+            notificationDTO.setNotifier(notification.getNotifier());
+            notificationDTO.setNotifierName(notification.getNotifyName());
+            notificationDTO.setOuterTitle(notification.getNotifyTitle());
+            notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
             notificationDTOS.add(notificationDTO);
         }
 
@@ -73,7 +76,29 @@ public class NotificationService {
     public Long unreadCount(Long userId) {
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria()
-                .andReceiverEqualTo(userId);
+                .andReceiverEqualTo(userId)
+                .andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
         return notificationMapper.countByExample(notificationExample);
+    }
+
+    public NotificationDTO read(Long id, User user) {
+        Notification notification = notificationMapper.selectByPrimaryKey(id);
+        if (notification == null) {
+            throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
+        } else if (!Objects.equals(notification.getReceiver(), user.getId())) {
+            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
+        }
+
+        notification.setStatus(NotificationStatusEnum.READ.getStatus());
+        notificationMapper.updateByPrimaryKey(notification);
+        NotificationDTO notificationDTO = new NotificationDTO();
+        BeanUtils.copyProperties(notification, notificationDTO);
+        notificationDTO.setNotifier(notification.getNotifier());
+        notificationDTO.setNotifierName(notification.getNotifyName());
+        notificationDTO.setOuterTitle(notification.getNotifyTitle());
+        notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
+
+        return notificationDTO;
+
     }
 }
