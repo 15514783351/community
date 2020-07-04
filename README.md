@@ -15,8 +15,8 @@
 [Lombok][https://projectlombok.org/setup/maven]
 [Thymeleaf][https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html]    
 [mybatis generator][http://mybatis.org/generator/]  
-[Spring docs][https://docs.spring.io/spring/docs/]
-
+[Spring docs][https://docs.spring.io/spring/docs/]  
+[Markdown 插件] [https://pandao.github.io/editor.md/]
 
 
 ## 工具
