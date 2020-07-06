@@ -85,7 +85,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(String search, Long userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
         Integer totalPage;
